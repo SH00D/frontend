@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>О компании ФармаПлюс — Наша миссия и история</title>
+  <meta name="description" content="Узнайте больше об аптеке ФармаПлюс: наша история, лицензии, миссия и забота о здоровье наших клиентов.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header__topbar">
+      <div class="container header__topbar-inner">
+        <span class="header__contact">📞 +7 (999) 999-99-99</span>
+      </div>
+    </div>
+    <div class="header__main">
+      <div class="container header__inner">
+        <a href="index.html" class="header__logo">
+          <span class="header__logo-icon">💊</span>
+          <span class="header__logo-text">Фарма<span>Плюс</span></span>
+        </a>
+        <div class="header__actions">
+          <a href="cart.html" class="header__cart">
+            🛒 <span class="badge header__cart-badge" style="display:none;">0</span>
+          </a>
+          <button class="header__burger" id="burger-btn">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <nav class="header__nav">
+      <div class="container header__nav-inner">
+        <a href="index.html" class="header__nav-link">Главная</a>
+        <a href="categories.html" class="header__nav-link">Категории</a>
+        <a href="catalog.html" class="header__nav-link">Каталог</a>
+        <a href="orders.html" class="header__nav-link">История заказов</a>
+        <a href="contacts.html" class="header__nav-link">Контакты</a>
+        <a href="info.html" class="header__nav-link header__nav-link--active">О нас</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page info-page">
+    <div class="container">
+      <!-- Breadcrumbs emulation -->
+      <nav class="breadcrumbs">
+        <a href="index.html" class="breadcrumbs__link">Главная</a>
+        <span class="breadcrumbs__sep">/</span>
+        <span class="breadcrumbs__item--active">О нас</span>
+      </nav>
+
+      <!-- Hero -->
+      <div class="info-hero card animate-fadeInUp">
+        <div class="info-hero__content">
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <span class="info-hero__badge">💊 С 2015 года</span>
+            <span class="info-hero__badge info-hero__badge--student">👨‍🎓 Выполнил: Хакимов Ш.Х. (ПИ-123)</span>
+          </div>
+          <h1 class="info-hero__title">ФармаПлюс — ваш надёжный партнёр в здоровье</h1>
+          <p class="info-hero__text">
+            Сайт разработан в рамках курсового проекта по дисциплине «Веб-разработка». 
+            Мы демонстрируем возможности современных веб-технологий на примере функционирующей интернет-аптеки.
+          </p>
+        </div>
+        <img
+          src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=500&q=80"
+          alt="О нас"
+          class="info-hero__img"
+        />
+      </div>
+
+      <!-- Numbers -->
+      <section class="info-numbers">
+        <div class="info-number card animate-fadeInUp" style="animation-delay: 0.1s;">
+          <strong class="info-number__value">9 лет</strong>
+          <span class="info-number__label">на рынке</span>
+        </div>
+        <div class="info-number card animate-fadeInUp" style="animation-delay: 0.2s;">
+          <strong class="info-number__value">50 000+</strong>
+          <span class="info-number__label">довольных клиентов</span>
+        </div>
+        <div class="info-number card animate-fadeInUp" style="animation-delay: 0.3s;">
+          <strong class="info-number__value">10 000+</strong>
+          <span class="info-number__label">товаров в каталоге</span>
+        </div>
+        <div class="info-number card animate-fadeInUp" style="animation-delay: 0.4s;">
+          <strong class="info-number__value">4.9 ⭐</strong>
+          <span class="info-number__label">средний рейтинг</span>
+        </div>
+      </section>
+
+      <!-- Mission -->
+      <section class="info-section">
+        <h2 class="info-section__title">🎯 Наша миссия</h2>
+        <p class="info-section__text">
+          Наша миссия — сделать качественную медицинскую помощь доступной каждому. Мы верим,
+          что каждый человек заслуживает возможности быстро и удобно получить необходимые
+          лекарства, не выходя из дома. Мы работаем только с проверенными производителями
+          и храним все препараты в соответствии с фармацевтическими стандартами.
+        </p>
+      </section>
+
+      <!-- License -->
+      <section class="info-section info-license card">
+        <div class="info-license__content">
+          <h2 class="info-section__title">📜 Лицензия и сертификация</h2>
+          <p class="info-section__text">
+            ФармаПлюс работает на основании лицензии Министерства здравоохранения Российской
+            Федерации № ЛСР-000123/2015. Все товары сертифицированы и соответствуют требованиям
+            ГОСТ Р и международным стандартам качества.
+          </p>
+          <ul class="info-license__list">
+            <li>✅ Лицензия Минздрава РФ</li>
+            <li>✅ Сертификат GMP (надлежащая производственная практика)</li>
+            <li>✅ Аккредитация Росздравнадзора</li>
+            <li>✅ ISO 9001:2015</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Delivery -->
+      <section class="info-delivery">
+        <h2 class="info-section__title" style="margin-bottom: 24px;">🚚 Доставка</h2>
+        <div class="info-delivery__grid">
+          <div class="info-delivery-card card">
+            <span class="info-delivery-card__icon">⚡</span>
+            <h4 class="info-delivery-card__title">Экспресс (2–4 ч)</h4>
+            <p class="info-delivery-card__desc">По Москве при заказе до 20:00</p>
+            <strong class="info-delivery-card__price">199 ₽</strong>
+          </div>
+          <div class="info-delivery-card card">
+            <span class="info-delivery-card__icon">📦</span>
+            <h4 class="info-delivery-card__title">Стандарт (1–2 дня)</h4>
+            <p class="info-delivery-card__desc">По всей России СДЭК и Boxberry</p>
+            <strong class="info-delivery-card__price">299 ₽</strong>
+          </div>
+          <div class="info-delivery-card card">
+            <span class="info-delivery-card__icon">🎁</span>
+            <h4 class="info-delivery-card__title">Бесплатно</h4>
+            <p class="info-delivery-card__desc">При заказе от 1000 ₽</p>
+            <strong class="info-delivery-card__price">0 ₽</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Legal Disclaimer -->
+      <section class="info-section legal-disclaimer card">
+        <h2 class="legal-disclaimer__title">⚠️ Правовая оговорка</h2>
+        <div class="legal-disclaimer__text">
+          <p style="margin-bottom: 12px;"><strong>Данный веб-сайт разработан студентом в рамках учебного проекта и носит исключительно демонстрационный характер.</strong> Все представленные на сайте сведения о лекарственных средствах, товарах для здоровья, их характеристиках, стоимости и наличии являются условными и используются исключительно в целях обучения и иллюстрации функциональных возможностей веб-приложения.</p>
+          <p style="margin-bottom: 12px;">Сайт не является реальной интернет-аптекой, не осуществляет дистанционную торговлю лекарственными средствами и не предоставляет медицинские или фармацевтические услуги.</p>
+          <p style="margin-bottom: 12px;">Разработчик не несёт ответственности за возможное использование представленной информации в практических целях, а также за любые последствия, связанные с попытками приобретения, применения или распространения лекарственных средств без соответствующих лицензий и разрешений, предусмотренных действующим законодательством.</p>
+          <p>Использование материалов сайта допускается исключительно в образовательных целях.</p>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <div class="info-cta card">
+        <h2>Перейти к просмотру проекта</h2>
+        <p>Изучите все реализованные функции каталога и корзины</p>
+        <a href="catalog.html" class="btn btn--primary btn--lg">В каталог</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="footer__logo">💊 ФармаПлюс</a>
+        <p>© 2026 Все права защищены.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
