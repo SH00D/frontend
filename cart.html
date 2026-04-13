@@ -61,7 +61,7 @@
                 <label class="form-label">Получатель</label>
                 <div class="checkout-form__row">
                   <input type="text" placeholder="Имя" class="form-input" required id="order-name" />
-                  <input type="tel" placeholder="Телефон" class="form-input" required id="order-phone" />
+                  <input type="tel" placeholder="Телефон" class="form-input" required id="order-phone" pattern="^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$" title="Введите номер в формате +7 (999) 999-99-99" />
                 </div>
               </div>
 
@@ -272,6 +272,13 @@
     }
 
     function placeOrder() {
+      const phoneStr = document.getElementById('order-phone').value;
+      const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+      if (!phoneRegex.test(phoneStr)) {
+        alert('Пожалуйста, убедитесь, что номер телефона введен полностью и корректно: +7 (XXX) XXX-XX-XX');
+        return;
+      }
+
       const orderId = 'FP-' + Math.floor(Math.random() * 90000 + 10000);
       const totalPrice = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
       const delivery = totalPrice > 1000 ? 0 : 199;
