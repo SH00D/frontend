@@ -6,6 +6,7 @@
   <title>Корзина покупок — ФармаПлюс</title>
   <meta name="description" content="Оформление заказа в интернет-аптеке ФармаПлюс. Быстрая доставка и удобные способы оплаты.">
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
   <!-- HEADER -->
@@ -80,7 +81,11 @@
 
               <div id="address-fields" class="checkout-form__group">
                 <label class="form-label">Адрес доставки</label>
-                <input type="text" placeholder="Город, улица, дом, квартира" class="form-input" required id="order-address" />
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" placeholder="Город, улица, дом" class="form-input" required id="order-address" style="flex: 1;" autocomplete="off" />
+                  <button type="button" class="btn btn--secondary" onclick="document.getElementById('checkout-map').scrollIntoView({behavior: 'smooth', block: 'center'})">📍 Карта</button>
+                </div>
+                <div id="checkout-map" class="checkout-map-wrap"></div>
               </div>
 
               <div class="checkout-form__group">
@@ -228,6 +233,9 @@
       document.getElementById('checkout-view').classList.toggle('checkout-section--active', view === 'checkout');
       document.getElementById('success-view').classList.toggle('order-success--active', view === 'success');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (view === 'checkout' && typeof checkoutMap !== 'undefined') {
+        setTimeout(() => checkoutMap.container.fitToViewport(), 100);
+      }
     }
 
     function setDelivery(type) {
@@ -292,7 +300,106 @@
       showView('success');
     }
 
-    document.addEventListener('DOMContentLoaded', renderCart);
+    document.addEventListener('DOMContentLoaded', function() {
+      renderCart();
+
+      // Phone Mask
+      const phoneInput = document.getElementById('order-phone');
+      if(phoneInput) {
+        phoneInput.addEventListener('input', function (e) {
+          var input = e.target.value.replace(/\D/g, '');
+          if (!input) { e.target.value = ''; return; }
+          if (['7', '8', '9'].indexOf(input[0]) > -1) {
+              if (input[0] === '9') input = '7' + input;
+              var firstSymbols = (input[0] === '8') ? '8' : '+7';
+              var formattedInputValue = firstSymbols + ' ';
+              if (input.length > 1) formattedInputValue += '(' + input.substring(1, 4);
+              if (input.length >= 5) formattedInputValue += ') ' + input.substring(4, 7);
+              if (input.length >= 8) formattedInputValue += '-' + input.substring(7, 9);
+              if (input.length >= 10) formattedInputValue += '-' + input.substring(9, 11);
+              e.target.value = formattedInputValue;
+          } else {
+              e.target.value = '+' + input.substring(0, 16);
+          }
+        });
+        phoneInput.addEventListener('keydown', function(e) {
+            if (e.keyCode === 8 && e.target.value.replace(/\D/g, '').length === 1) {
+                e.target.value = '';
+            }
+        });
+      }
+    });
+
+    // Yandex Map Integration
+    let checkoutMap, mapPlacemark;
+    if (typeof ymaps !== 'undefined') {
+      ymaps.ready(initMap);
+    }
+    
+    function initMap() {
+      checkoutMap = new ymaps.Map("checkout-map", {
+        center: [56.129, 40.406], // Vladimir
+        zoom: 12,
+        controls: ['zoomControl', 'searchControl']
+      });
+
+      checkoutMap.events.add('click', function (e) {
+        var coords = e.get('coords');
+        
+        if (mapPlacemark) {
+            mapPlacemark.geometry.setCoordinates(coords);
+        } else {
+            mapPlacemark = createPlacemark(coords);
+            checkoutMap.geoObjects.add(mapPlacemark);
+            mapPlacemark.events.add('dragend', function () {
+                getAddress(mapPlacemark.geometry.getCoordinates());
+            });
+        }
+        getAddress(coords);
+      });
+
+      var searchControl = checkoutMap.controls.get('searchControl');
+      searchControl.events.add('resultselect', function (e) {
+          var index = e.get('index');
+          searchControl.getResult(index).then(function (res) {
+             var coords = res.geometry.getCoordinates();
+             if (mapPlacemark) {
+                 mapPlacemark.geometry.setCoordinates(coords);
+             } else {
+                 mapPlacemark = createPlacemark(coords);
+                 checkoutMap.geoObjects.add(mapPlacemark);
+                 mapPlacemark.events.add('dragend', function () {
+                     getAddress(mapPlacemark.geometry.getCoordinates());
+                 });
+             }
+             document.getElementById('order-address').value = res.properties.get('text');
+          });
+      });
+    }
+
+    function createPlacemark(coords) {
+        return new ymaps.Placemark(coords, {
+            iconCaption: 'Поиск...'
+        }, {
+            preset: 'islands#violetDotIconWithCaption',
+            draggable: true
+        });
+    }
+
+    function getAddress(coords) {
+        mapPlacemark.properties.set('iconCaption', 'Поиск...');
+        ymaps.geocode(coords).then(function (res) {
+            var firstGeoObject = res.geoObjects.get(0);
+            if (firstGeoObject) {
+              var address = firstGeoObject.getAddressLine();
+              document.getElementById('order-address').value = address;
+              mapPlacemark.properties.set({
+                  iconCaption: address,
+                  balloonContent: address
+              });
+            }
+        });
+    }
   </script>
 </body>
 </html>
