@@ -272,12 +272,15 @@
     }
 
     function placeOrder() {
-      const phoneStr = document.getElementById('order-phone').value;
+      const phoneInput = document.getElementById('order-phone');
+      const phoneStr = phoneInput.value;
       const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
       if (!phoneRegex.test(phoneStr)) {
+        phoneInput.classList.add('form-input--error');
         alert('Пожалуйста, убедитесь, что номер телефона введен полностью и корректно: +7 (XXX) XXX-XX-XX');
         return;
       }
+      phoneInput.classList.remove('form-input--error');
 
       const orderId = 'FP-' + Math.floor(Math.random() * 90000 + 10000);
       const totalPrice = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);

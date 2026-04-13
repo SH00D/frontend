@@ -324,6 +324,8 @@
 .order-success__icon { width: 80px; height: 80px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 12px; }
 .order-success__number { font-weight: 900; color: var(--color-primary); font-size: 1.2rem; }
 .order-success__actions { display: flex; gap: 12px; margin-top: 24px; }
+.form-input:not(:placeholder-shown):invalid, .form-input.form-input--error { border-color: var(--color-error) !important; background-color: #fffafaf0; box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15); }
+.form-input:not(:placeholder-shown):valid { border-color: var(--color-primary); }
 .product-card{border-radius:var(--radius-md);background:var(--color-bg);border:1px solid var(--color-border);flex-direction:column;transition:transform .25s,box-shadow .25s;display:flex;overflow:hidden}.product-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-6px)}.product-card__image-wrap {
   aspect-ratio: 4/3;
   background: #fff;
