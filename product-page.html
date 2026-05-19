@@ -58,81 +58,79 @@
   <script src="js/products.js"></script>
   <script src="js/main.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const productId = parseInt(urlParams.get('id'));
-      const product = mockProducts.find(p => p.id === productId);
-
       const container = document.getElementById('product-container');
 
-        if (!product) {
+      if (!productId) {
         document.title = 'Товар не найден — ФармаПлюс';
-        container.innerHTML = '<div class="container"><h1>Товар не найден</h1><a href="catalog.html">Назад в каталог</a></div>';
+        container.innerHTML = '<div class="container" style="padding:60px 20px;text-align:center;"><h1>Товар не найден</h1><a href="catalog.html" class="btn btn--primary" style="margin-top:16px;">Назад в каталог</a></div>';
         return;
       }
 
-      document.title = `${product.name} — Купить в ФармаПлюс`;
-      const inCart = cart.some(item => item.product.id === product.id);
-      const ratingStars = '⭐'.repeat(Math.round(product.rating));
-      const saving = product.oldPrice ? product.oldPrice - product.price : 0;
+      // Loader
+      container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;padding:80px 20px;gap:12px;"><div style="width:40px;height:40px;border:4px solid #e2e8f0;border-top-color:#00a651;border-radius:50%;animation:spin .7s linear infinite;"></div><span style="color:#6b7c80;">Загрузка...</span></div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>';
 
-      container.innerHTML = `
-        <div class="container">
-          <div class="product-page__grid animate-fadeInUp">
-            <div class="product-page__image-wrap">
-              ${product.oldPrice ? '<span class="product-page__badge product-page__badge--sale">Скидка</span>' : ''}
-              ${!product.inStock ? '<span class="product-page__badge product-page__badge--out">Нет в наличии</span>' : ''}
-              <img src="${product.image}" alt="${product.name}" class="product-page__image" />
-            </div>
-            
-            <div class="product-page__info">
-              <span class="product-page__category">${product.categoryLabel}</span>
-              <h1 class="product-page__name">${product.name}</h1>
+      try {
+        const product = await fetchProductById(productId);
+
+        document.title = `${product.name} — Купить в ФармаПлюс`;
+        const inCart = cart.some(item => item.product.id === product.id);
+
+        container.innerHTML = `
+          <div class="container">
+            <div class="product-page__grid animate-fadeInUp">
+              <div class="product-page__image-wrap">
+                ${!product.stock ? '<span class="product-page__badge product-page__badge--out">Нет в наличии</span>' : ''}
+                <img src="${product.imageUrl || 'img/placeholder.png'}" alt="${product.name}" class="product-page__image" />
+              </div>
               
-              <div class="product-page__rating">
-                ${ratingStars}
-                <span class="product-page__rating-score">${product.rating}</span>
-                <span class="product-page__reviews">(${product.reviews} отзывов)</span>
-              </div>
+              <div class="product-page__info">
+                <span class="product-page__category">${product.categoryName || 'Без категории'}</span>
+                <h1 class="product-page__name">${product.name}</h1>
 
-              <div class="product-page__prices">
-                <span class="product-page__price">${product.price} ₽</span>
-                ${product.oldPrice ? `<span class="product-page__old-price">${product.oldPrice} ₽</span>` : ''}
-                ${saving > 0 ? `<span class="product-page__saving">Вы экономите ${saving} ₽</span>` : ''}
-              </div>
+                <div class="product-page__prices">
+                  <span class="product-page__price">${Number(product.price).toLocaleString('ru-RU')} ₽</span>
+                </div>
 
-              <div class="product-page__actions">
-                <button 
-                  class="btn btn--lg ${inCart ? 'btn--outline' : 'btn--primary'}" 
-                  onclick="addToCart(${product.id})" 
-                  ${!product.inStock ? 'disabled' : ''}
-                  id="add-to-cart-${product.id}"
-                >
-                  ${inCart ? '✓ В корзине' : 'Добавить в корзину'}
-                </button>
-              </div>
+                <div class="product-page__actions">
+                  <button 
+                    class="btn btn--lg ${inCart ? 'btn--outline' : 'btn--primary'}" 
+                    onclick="addToCart(${product.id})" 
+                    ${!product.stock ? 'disabled' : ''}
+                    id="add-to-cart-${product.id}"
+                  >
+                    ${inCart ? '✓ В корзине' : 'Добавить в корзину'}
+                  </button>
+                </div>
 
-              <p class="product-page__desc">${product.description}</p>
-              
-              <div class="product-page__chars">
-                <div class="product-page__chars-title">Характеристики</div>
-                <table class="product-page__chars-table">
-                  <tr class="product-page__chars-row">
-                    <td class="product-page__chars-label">Категория</td>
-                    <td class="product-page__chars-value">${product.categoryLabel}</td>
-                  </tr>
-                  <tr class="product-page__chars-row">
-                    <td class="product-page__chars-label">Наличие</td>
-                    <td class="product-page__chars-value">
-                      ${product.inStock ? '<span class="product-page__in-stock">В наличии</span>' : '<span class="product-page__out-stock">Под заказ</span>'}
-                    </td>
-                  </tr>
-                </table>
+                <p class="product-page__desc">${product.description || ''}</p>
+                
+                <div class="product-page__chars">
+                  <div class="product-page__chars-title">Характеристики</div>
+                  <table class="product-page__chars-table">
+                    <tr class="product-page__chars-row">
+                      <td class="product-page__chars-label">Категория</td>
+                      <td class="product-page__chars-value">${product.categoryName || '—'}</td>
+                    </tr>
+                    <tr class="product-page__chars-row">
+                      <td class="product-page__chars-label">Наличие</td>
+                      <td class="product-page__chars-value">
+                        ${product.stock ? '<span class="product-page__in-stock">В наличии</span>' : '<span class="product-page__out-stock">Под заказ</span>'}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      `;
+        `;
+      } catch (error) {
+        console.error('Product load error:', error);
+        document.title = 'Товар не найден — ФармаПлюс';
+        container.innerHTML = '<div class="container" style="padding:60px 20px;text-align:center;"><span style="font-size:3rem;">⚠️</span><h1 style="margin-top:12px;">Товар не найден</h1><p style="color:#6b7c80;margin:8px 0 20px;">Возможно, товар был удалён или сервер недоступен</p><a href="catalog.html" class="btn btn--primary">Назад в каталог</a></div>';
+      }
     });
   </script>
 </body>

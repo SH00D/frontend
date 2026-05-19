@@ -1,6 +1,17 @@
-// Global Cart State and UI Logic
+/* ══════════════════════════════════════════════════════════
+   main.js — Global Cart State, addToCart, Mobile Menu
+   Работает с данными из API (product.imageUrl, product.categoryName, product.stock)
+   ══════════════════════════════════════════════════════════ */
+
+// Global Cart State
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+// Кэш загруженных товаров (для addToCart)
+let _productsCache = null;
+
+/**
+ * Обновить бейдж корзины
+ */
 function updateCartBadge() {
   const badges = document.querySelectorAll('.header__cart-badge');
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -14,20 +25,38 @@ function updateCartBadge() {
   });
 }
 
-function addToCart(productId) {
-  const product = mockProducts.find(p => p.id === productId);
-  if (!product || !product.inStock) return;
-  
+/**
+ * Загрузить и закэшировать товары
+ */
+async function getProductsCache() {
+  if (_productsCache) return _productsCache;
+  try {
+    _productsCache = await fetchProducts();
+    return _productsCache;
+  } catch (e) {
+    console.error('Не удалось загрузить товары для корзины:', e);
+    return [];
+  }
+}
+
+/**
+ * Добавить товар в корзину по ID (загружает из API если нужно)
+ */
+async function addToCart(productId) {
+  const products = await getProductsCache();
+  const product = products.find(p => p.id === productId);
+  if (!product || !product.stock) return;
+
   const existing = cart.find(item => item.product.id === productId);
   if (existing) {
     existing.quantity += 1;
   } else {
     cart.push({ product, quantity: 1 });
   }
-  
+
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartBadge();
-  
+
   // Update button state on the page immediately
   const btn = document.getElementById(`add-to-cart-${productId}`);
   if (btn) {

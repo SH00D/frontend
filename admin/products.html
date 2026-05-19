@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Управление товарами — ФармаПлюс CMS</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="admin-sidebar">
+      <div class="sidebar__logo"><span class="sidebar__logo-icon">💊</span> Фарма<span>Плюс</span></div>
+      <nav class="sidebar__nav">
+        <a href="index.html" class="sidebar__link"><span class="sidebar__link-icon">📊</span> Дашборд</a>
+        <a href="products.html" class="sidebar__link sidebar__link--active"><span class="sidebar__link-icon">📦</span>
+          Товары</a>
+        <a href="add-product.html" class="sidebar__link"><span class="sidebar__link-icon">➕</span> Добавить товар</a>
+        <a href="orders.html" class="sidebar__link"><span class="sidebar__link-icon">🧾</span> Заказы</a>
+        <a href="categories.html" class="sidebar__link"><span class="sidebar__link-icon">📁</span> Категории</a>
+      </nav>
+      <div class="sidebar__footer"><a href="../index.html" class="sidebar__store-link">🌐 Перейти в магазин</a><a
+          href="#" class="sidebar__store-link" id="admin-logout-btn" style="margin-top:8px;color:#ff6b6b;">🚪 Выйти</a>
+      </div>
+    </aside>
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;display:none" id="sidebar-overlay"></div>
+
+    <div class="admin-content">
+      <header class="admin-header">
+        <div class="admin-header__left">
+          <button class="admin-header__burger" id="admin-burger"><span></span><span></span><span></span></button>
+          <div class="admin-header__search">
+            <span class="admin-header__search-icon">🔍</span>
+            <input type="text" class="admin-header__search-input" placeholder="Поиск по панели...">
+          </div>
+        </div>
+        <div class="admin-header__right">
+          <button class="admin-header__notif">🔔<span class="admin-header__notif-dot"></span></button>
+          <div class="admin-header__user">
+            <div class="admin-header__avatar">АД</div>
+            <div>
+              <div class="admin-header__user-name">Администратор</div>
+              <div class="admin-header__user-role">Суперадмин</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="admin-main">
+        <h1 class="admin-page-title">Управление товарами <span id="products-count"
+            style="font-size:.9rem;color:var(--admin-text-muted);font-weight:400"></span></h1>
+
+        <div class="toolbar">
+          <div class="toolbar__left">
+            <div class="toolbar__search">
+              <span class="toolbar__search-icon">🔍</span>
+              <input type="text" class="toolbar__search-input" id="products-search" placeholder="Поиск товара...">
+            </div>
+            <select class="form-select toolbar__filter" id="products-cat-filter">
+              <option value="">Все категории</option>
+            </select>
+            <select class="form-select toolbar__filter" id="products-stock-filter">
+              <option value="">Наличие</option>
+              <option value="in">В наличии</option>
+              <option value="out">Нет в наличии</option>
+            </select>
+          </div>
+          <a href="add-product.html" class="btn btn--primary">➕ Добавить товар</a>
+        </div>
+
+        <div class="panel">
+          <div style="overflow-x:auto">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Фото</th>
+                  <th>Название</th>
+                  <th>Категория</th>
+                  <th>Цена</th>
+                  <th>Наличие</th>
+                  <th>Действия</th>
+                </tr>
+              </thead>
+              <tbody id="products-tbody"></tbody>
+            </table>
+          </div>
+          <div class="panel__footer">
+            <div class="pagination" id="products-pagination"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title">Удалить товар</h3>
+        <button class="modal__close" onclick="closeModal('delete-modal')">✕</button>
+      </div>
+      <div class="modal__body"></div>
+      <div class="modal__footer">
+        <button class="btn btn--outline" onclick="closeModal('delete-modal')">Отмена</button>
+        <button class="btn btn--danger" id="confirm-delete-btn">Удалить</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script src="js/products.js"></script>
+  <script>
+
+    const user =
+      JSON.parse(
+        localStorage.getItem(
+          'pharma_admin_auth'
+        )
+      );
+
+    if (
+      !user ||
+      user.role !== 'ADMIN'
+    ) {
+
+      window.location.href =
+        'login.html';
+    }
+
+  </script>
+</body>
+
+</html>

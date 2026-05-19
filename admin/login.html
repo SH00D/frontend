@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход в панель управления — ФармаПлюс</title>
+  <meta name="description" content="Авторизация администратора ФармаПлюс CMS">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    /* ── Login Page Specific Styles ── */
+    body.login-body {
+      background: linear-gradient(135deg, #0d1f1a 0%, #113326 40%, #0a2e1f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated background particles */
+    .login-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .login-bg__circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: .07;
+      animation: floatCircle 20s infinite ease-in-out;
+    }
+
+    .login-bg__circle:nth-child(1) {
+      width: 400px;
+      height: 400px;
+      background: var(--admin-primary);
+      top: -10%;
+      left: -5%;
+      animation-duration: 22s;
+    }
+
+    .login-bg__circle:nth-child(2) {
+      width: 300px;
+      height: 300px;
+      background: var(--admin-accent);
+      top: 60%;
+      right: -8%;
+      animation-duration: 18s;
+      animation-delay: -5s;
+    }
+
+    .login-bg__circle:nth-child(3) {
+      width: 200px;
+      height: 200px;
+      background: #00c9a7;
+      bottom: -5%;
+      left: 30%;
+      animation-duration: 25s;
+      animation-delay: -10s;
+    }
+
+    .login-bg__circle:nth-child(4) {
+      width: 150px;
+      height: 150px;
+      background: var(--admin-primary);
+      top: 20%;
+      right: 20%;
+      animation-duration: 20s;
+      animation-delay: -7s;
+    }
+
+    @keyframes floatCircle {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      25% {
+        transform: translate(30px, -40px) scale(1.1);
+      }
+
+      50% {
+        transform: translate(-20px, 20px) scale(.95);
+      }
+
+      75% {
+        transform: translate(15px, 35px) scale(1.05);
+      }
+    }
+
+    /* Login Card */
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      background: rgba(255, 255, 255, .97);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, .35), 0 0 0 1px rgba(255, 255, 255, .1);
+      padding: 48px 40px 40px;
+      animation: cardAppear .6s ease-out;
+    }
+
+    @keyframes cardAppear {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Logo */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .login-logo__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--admin-primary), #00c9a7);
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(0, 166, 81, .3);
+      animation: iconPulse 3s infinite ease-in-out;
+    }
+
+    @keyframes iconPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 8px 24px rgba(0, 166, 81, .3);
+      }
+
+      50% {
+        box-shadow: 0 8px 32px rgba(0, 166, 81, .5);
+      }
+    }
+
+    .login-logo__title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--admin-text);
+      letter-spacing: -.02em;
+    }
+
+    .login-logo__title span {
+      color: var(--admin-primary);
+    }
+
+    .login-logo__subtitle {
+      font-size: .88rem;
+      color: var(--admin-text-muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    /* Separator */
+    .login-separator {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 28px 0 24px;
+      color: var(--admin-text-muted);
+      font-size: .78rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .login-separator::before,
+    .login-separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--admin-border), transparent);
+    }
+
+    /* Form */
+    .login-form .form-group {
+      margin-bottom: 18px;
+    }
+
+    .login-form .form-label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--admin-text);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .login-form .form-input {
+      width: 100%;
+      padding: 13px 16px 13px 46px;
+      border: 1.5px solid var(--admin-border);
+      border-radius: 12px;
+      font-size: .93rem;
+      background: var(--admin-bg);
+      transition: all var(--admin-transition);
+    }
+
+    .login-form .form-input:focus {
+      background: var(--admin-white);
+      border-color: var(--admin-primary);
+      box-shadow: 0 0 0 4px rgba(0, 166, 81, .1);
+    }
+
+    .login-form .form-input.input--error {
+      border-color: var(--admin-danger);
+      box-shadow: 0 0 0 4px rgba(229, 62, 62, .1);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper__icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      opacity: .5;
+      transition: opacity var(--admin-transition);
+      pointer-events: none;
+    }
+
+    .input-wrapper:focus-within .input-wrapper__icon {
+      opacity: .85;
+    }
+
+    .input-wrapper__toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      opacity: .4;
+      transition: opacity var(--admin-transition);
+      padding: 4px;
+    }
+
+    .input-wrapper__toggle:hover {
+      opacity: .8;
+    }
+
+    /* Error message */
+    .login-error {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--admin-danger-light);
+      color: var(--admin-danger);
+      border-radius: 10px;
+      font-size: .85rem;
+      font-weight: 500;
+      margin-bottom: 18px;
+      animation: shakeError .4s ease-out;
+      border: 1px solid rgba(229, 62, 62, .15);
+    }
+
+    .login-error--visible {
+      display: flex;
+    }
+
+    @keyframes shakeError {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20% {
+        transform: translateX(-8px);
+      }
+
+      40% {
+        transform: translateX(8px);
+      }
+
+      60% {
+        transform: translateX(-4px);
+      }
+
+      80% {
+        transform: translateX(4px);
+      }
+    }
+
+    /* Submit button */
+    .login-btn {
+      width: 100%;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--admin-primary), #008a44);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 166, 81, .35);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn--loading {
+      pointer-events: none;
+      opacity: .85;
+    }
+
+    .login-btn--loading .login-btn__text {
+      visibility: hidden;
+    }
+
+    .login-btn__spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(255, 255, 255, .3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      display: none;
+      animation: spin .6s linear infinite;
+    }
+
+    .login-btn--loading .login-btn__spinner {
+      display: block;
+    }
+
+    @keyframes spin {
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    /* Footer */
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--admin-border);
+    }
+
+    .login-footer__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--admin-text-muted);
+      font-size: .82rem;
+      font-weight: 500;
+      transition: color var(--admin-transition);
+    }
+
+    .login-footer__link:hover {
+      color: var(--admin-primary);
+    }
+
+    /* Remember me */
+    .login-remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .login-remember input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--admin-primary);
+      cursor: pointer;
+    }
+
+    .login-remember label {
+      font-size: .84rem;
+      color: var(--admin-text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 500px) {
+      .login-card {
+        padding: 36px 24px 32px;
+        border-radius: 16px;
+      }
+
+      .login-logo__icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+      }
+
+      .login-logo__title {
+        font-size: 1.35rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="login-body">
+
+  <!-- Animated Background -->
+  <div class="login-bg">
+    <div class="login-bg__circle"></div>
+    <div class="login-bg__circle"></div>
+    <div class="login-bg__circle"></div>
+    <div class="login-bg__circle"></div>
+  </div>
+
+  <!-- Login Card -->
+  <div class="login-card">
+    <!-- Logo -->
+    <div class="login-logo">
+      <div class="login-logo__icon">💊</div>
+      <div class="login-logo__title">Фарма<span>Плюс</span></div>
+      <div class="login-logo__subtitle">Панель управления</div>
+    </div>
+
+    <div class="login-separator">Авторизация</div>
+
+    <!-- Error Alert -->
+    <div class="login-error" id="login-error">
+      <span>❌</span>
+      <span id="login-error-text">Неверный логин или пароль</span>
+    </div>
+
+    <!-- Form -->
+    <form class="login-form" id="login-form" autocomplete="on">
+      <div class="form-group">
+        <label class="form-label" for="login-input">👤 Логин</label>
+        <div class="input-wrapper">
+          <span class="input-wrapper__icon">🔑</span>
+          <input type="text" class="form-input" id="login-input" name="username" placeholder="Введите логин"
+            autocomplete="username" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password-input">🔒 Пароль</label>
+        <div class="input-wrapper">
+          <span class="input-wrapper__icon">🛡️</span>
+          <input type="password" class="form-input" id="password-input" name="password" placeholder="Введите пароль"
+            autocomplete="current-password" required />
+          <button type="button" class="input-wrapper__toggle" id="toggle-password" title="Показать пароль">👁️</button>
+        </div>
+      </div>
+
+      <div class="login-remember">
+        <input type="checkbox" id="remember-me" />
+        <label for="remember-me">Запомнить меня</label>
+      </div>
+
+      <button type="submit" class="login-btn" id="login-btn">
+        <span class="login-btn__text">Войти в панель</span>
+        <div class="login-btn__spinner"></div>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <a href="../index.html" class="login-footer__link">🌐 Вернуться в магазин</a>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8080/api';
+
+    const loginForm = document.getElementById('login-form');
+    const loginInput = document.getElementById('login-input');
+    const passwordInput = document.getElementById('password-input');
+    const loginBtn = document.getElementById('login-btn');
+    const loginError = document.getElementById('login-error');
+    const loginErrorText = document.getElementById('login-error-text');
+    const togglePassword = document.getElementById('toggle-password');
+
+    // If already logged in, redirect
+    const savedUser =
+      JSON.parse(
+        localStorage.getItem(
+          'pharma_admin_auth'
+        )
+      );
+
+    if (savedUser) {
+
+      if (savedUser.role === 'ADMIN') {
+
+        window.location.replace(
+          'index.html'
+        );
+
+      } else {
+
+        window.location.replace(
+          '../index.html'
+        );
+      }
+    }
+
+    // Toggle password visibility
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Hide error on input
+    [loginInput, passwordInput].forEach(input => {
+      input.addEventListener('input', () => {
+        loginError.classList.remove('login-error--visible');
+        input.classList.remove('input--error');
+      });
+    });
+
+    function showError(message) {
+      loginErrorText.textContent = message;
+      loginError.classList.remove('login-error--visible');
+      // Force reflow to restart animation
+      void loginError.offsetWidth;
+      loginError.classList.add('login-error--visible');
+      loginInput.classList.add('input--error');
+      passwordInput.classList.add('input--error');
+    }
+
+    function setLoading(loading) {
+      if (loading) {
+        loginBtn.classList.add('login-btn--loading');
+      } else {
+        loginBtn.classList.remove('login-btn--loading');
+      }
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const login = loginInput.value.trim();
+      const password = passwordInput.value;
+
+      // Client-side validation
+      if (!login) {
+        showError('Введите логин');
+        loginInput.focus();
+        return;
+      }
+      if (!password) {
+        showError('Введите пароль');
+        passwordInput.focus();
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const response = await fetch(API_BASE + '/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ login, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Save auth data
+          const authData = {
+            login: data.login,
+            role: data.role,
+            timestamp: Date.now()
+          };
+          localStorage.setItem('pharma_admin_auth', JSON.stringify(authData));
+
+          // Success animation
+          loginBtn.style.background = 'var(--admin-primary)';
+          loginBtn.classList.remove('login-btn--loading');
+          loginBtn.innerHTML = '✅ Вход выполнен!';
+
+          // Redirect after brief delay
+          setTimeout(() => {
+
+            if (data.role === 'ADMIN') {
+
+              window.location.replace(
+                'index.html'
+              );
+
+            } else {
+
+              window.location.replace(
+                '../index.html'
+              );
+            }
+
+          }, 600);
+        } else {
+          setLoading(false);
+          showError(data.message || 'Неверный логин или пароль');
+        }
+      } catch (err) {
+        setLoading(false);
+        showError('Сервер недоступен. Проверьте, запущен ли бэкенд.');
+        console.error('Login error:', err);
+      }
+    });
+
+    // Focus first input on load
+    loginInput.focus();
+  </script>
+</body>
+
+</html>

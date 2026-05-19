@@ -73,22 +73,38 @@
   <script src="js/products.js"></script>
   <script src="js/main.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const catGrid = document.getElementById('categories-grid');
-      categories.forEach(cat => {
-        catGrid.innerHTML += `
-          <a href="catalog.html?category=${cat.id}" class="cat-card card animate-fadeInUp" style="--cat-color: ${cat.color}; --cat-bg: ${cat.bg}">
-            <div class="cat-card__icon-wrap" style="background: ${cat.bg}">
-              <span class="cat-card__icon">${cat.icon}</span>
+
+      try {
+        const categories = await fetchCategories();
+        const fragment = document.createDocumentFragment();
+
+        categories.forEach(cat => {
+          const meta = getCategoryMeta(cat.name);
+          const link = document.createElement('a');
+          link.href = `catalog.html?category=${encodeURIComponent(cat.name)}`;
+          link.className = 'cat-card card animate-fadeInUp';
+          link.style.cssText = `--cat-color: ${meta.color}; --cat-bg: ${meta.bg}`;
+          link.innerHTML = `
+            <div class="cat-card__icon-wrap" style="background: ${meta.bg}">
+              <span class="cat-card__icon">${meta.icon}</span>
             </div>
             <div class="cat-card__body">
-              <h2 class="cat-card__title">${cat.label}</h2>
-              <p class="cat-card__desc">${cat.description}</p>
+              <h2 class="cat-card__title">${cat.name}</h2>
+              <p class="cat-card__desc">${meta.description}</p>
               <span class="cat-card__link">Смотреть товары →</span>
             </div>
-          </a>
-        `;
-      });
+          `;
+          fragment.appendChild(link);
+        });
+
+        catGrid.appendChild(fragment);
+
+      } catch (error) {
+        console.error('Categories load error:', error);
+        catGrid.innerHTML = '<p style="color:#6b7c80;text-align:center;padding:40px;">Не удалось загрузить категории. Проверьте, запущен ли бэкенд.</p>';
+      }
     });
   </script>
 </body>

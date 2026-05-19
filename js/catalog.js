@@ -1,4 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
+/* ══════════════════════════════════════════════════════════
+   catalog.js — Каталог товаров с API, фильтрацией,
+   поиском, сортировкой и пагинацией
+   ══════════════════════════════════════════════════════════ */
+
+document.addEventListener('DOMContentLoaded', async () => {
   const catalogGrid = document.getElementById('catalog-grid');
   const resultsCount = document.getElementById('results-count');
   const filterCatContainer = document.getElementById('filter-categories');
@@ -17,33 +22,93 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentPage = 1;
   const PER_PAGE = 9;
 
+  // Data from API
+  let allProducts = [];
+  let allCategories = [];
+
   if (searchInput) searchInput.value = currentSearch;
 
-  // Render Category Filter Buttons
+  // ── Load Data from Backend ──
+  showLoader(catalogGrid);
+
+  try {
+    const [products, categories] = await Promise.all([
+      fetchProducts(),
+      fetchCategories()
+    ]);
+
+    allProducts = products;
+    allCategories = categories;
+    hideLoader();
+
+    // Set max price from data
+    if (allProducts.length > 0) {
+      const maxProductPrice = Math.max(...allProducts.map(p => Number(p.price)));
+      const roundedMax = Math.ceil(maxProductPrice / 100) * 100;
+      if (priceRange) {
+        priceRange.max = roundedMax;
+        priceRange.value = roundedMax;
+        currentMaxPrice = roundedMax;
+      }
+      if (priceLabel) {
+        priceLabel.textContent = `Цена до: ${roundedMax} ₽`;
+      }
+    }
+
+    // If URL has category name (from categories page), match it
+    if (currentCategory) {
+      const matchedCat = allCategories.find(c =>
+        c.name.toLowerCase() === currentCategory.toLowerCase() ||
+        c.id.toString() === currentCategory
+      );
+      if (matchedCat) {
+        currentCategory = matchedCat.name;
+      }
+    }
+
+    renderCategoryFilters();
+    renderCatalog();
+
+  } catch (error) {
+    hideLoader();
+    showErrorState(catalogGrid, 'Не удалось загрузить каталог');
+    console.error('Catalog load error:', error);
+    return;
+  }
+
+  // ── Render Category Filter Buttons ──
   function renderCategoryFilters() {
-    filterCatContainer.innerHTML = `
-      <button class="catalog-sidebar__cat-btn ${!currentCategory ? 'catalog-sidebar__cat-btn--active' : ''}" onclick="updateCategory('')">
-        📂 Все товары
-      </button>
-    `;
-    categories.forEach(cat => {
-      const active = currentCategory === cat.id ? 'catalog-sidebar__cat-btn--active' : '';
-      filterCatContainer.innerHTML += `
-        <button class="catalog-sidebar__cat-btn ${active}" onclick="updateCategory('${cat.id}')">
-          ${cat.icon} ${cat.label}
-        </button>
-      `;
+    if (!filterCatContainer) return;
+
+    filterCatContainer.innerHTML = '';
+
+    // "All" button
+    const allBtn = document.createElement('button');
+    allBtn.className = `catalog-sidebar__cat-btn ${!currentCategory ? 'catalog-sidebar__cat-btn--active' : ''}`;
+    allBtn.textContent = '📂 Все товары';
+    allBtn.addEventListener('click', () => updateCategory(''));
+    filterCatContainer.appendChild(allBtn);
+
+    // Category buttons from API
+    allCategories.forEach(cat => {
+      const meta = getCategoryMeta(cat.name);
+      const active = currentCategory === cat.name ? 'catalog-sidebar__cat-btn--active' : '';
+      const btn = document.createElement('button');
+      btn.className = `catalog-sidebar__cat-btn ${active}`;
+      btn.textContent = `${meta.icon} ${cat.name}`;
+      btn.addEventListener('click', () => updateCategory(cat.name));
+      filterCatContainer.appendChild(btn);
     });
   }
 
-  window.updateCategory = function(id) {
-    currentCategory = id;
+  function updateCategory(name) {
+    currentCategory = name;
     currentPage = 1;
     renderCategoryFilters();
     renderCatalog();
-  };
+  }
 
-  // Events
+  // ── Events ──
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       currentSearch = e.target.value.toLowerCase();
@@ -55,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (priceRange) {
     priceRange.addEventListener('input', (e) => {
       currentMaxPrice = parseInt(e.target.value);
-      priceLabel.textContent = `Цена до: ${currentMaxPrice} ₽`;
+      priceLabel.textContent = `Цена до: ${currentMaxPrice.toLocaleString('ru-RU')} ₽`;
       currentPage = 1;
       renderCatalog();
     });
@@ -69,51 +134,64 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ── Main Render Function ──
   function renderCatalog() {
     // Filter
-    let filtered = mockProducts.filter(p => {
-      const matchSearch = p.name.toLowerCase().includes(currentSearch);
-      const matchCat = currentCategory ? p.category === currentCategory : true;
-      const matchPrice = p.price <= currentMaxPrice;
+    let filtered = allProducts.filter(p => {
+      const matchSearch = p.name.toLowerCase().includes(currentSearch) ||
+        (p.description && p.description.toLowerCase().includes(currentSearch));
+      const matchCat = currentCategory
+        ? p.categoryName === currentCategory
+        : true;
+      const matchPrice = Number(p.price) <= currentMaxPrice;
       return matchSearch && matchCat && matchPrice;
     });
 
     // Sort
     switch (currentSort) {
-      case 'price_asc': filtered.sort((a, b) => a.price - b.price); break;
-      case 'price_desc': filtered.sort((a, b) => b.price - a.price); break;
-      case 'name_asc': filtered.sort((a, b) => a.name.localeCompare(b.name, 'ru')); break;
-      case 'rating': filtered.sort((a, b) => b.rating - a.rating); break;
+      case 'price_asc':
+        filtered.sort((a, b) => Number(a.price) - Number(b.price));
+        break;
+      case 'price_desc':
+        filtered.sort((a, b) => Number(b.price) - Number(a.price));
+        break;
+      case 'name_asc':
+        filtered.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+        break;
     }
 
-    resultsCount.textContent = `${filtered.length} товаров`;
+    if (resultsCount) {
+      resultsCount.textContent = `${filtered.length} товаров`;
+    }
 
     // Pagination
     const totalPages = Math.ceil(filtered.length / PER_PAGE);
     const paginated = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 
-    catalogGrid.innerHTML = '';
-    
+    // Clear grid (using while loop — fastest way)
+    while (catalogGrid.firstChild) {
+      catalogGrid.removeChild(catalogGrid.firstChild);
+    }
+
     if (paginated.length === 0) {
-      catalogGrid.innerHTML = `
-        <div class="catalog-empty">
-          <span style="font-size: 3rem;">😕</span>
-          <h3>Ничего не найдено</h3>
-          <p>Попробуйте смягчить фильтры или изменить запрос</p>
-        </div>
-      `;
-      paginationContainer.innerHTML = '';
+      showEmptyState(catalogGrid);
+      if (paginationContainer) paginationContainer.innerHTML = '';
       return;
     }
 
-    paginated.forEach(prod => {
-      catalogGrid.innerHTML += createProductCardHTML(prod, cart);
+    // Build cards using DocumentFragment (no innerHTML += in loop)
+    const fragment = document.createDocumentFragment();
+    paginated.forEach(product => {
+      fragment.appendChild(createProductCard(product, cart));
     });
+    catalogGrid.appendChild(fragment);
 
     renderPagination(totalPages);
   }
 
+  // ── Pagination ──
   function renderPagination(totalPages) {
+    if (!paginationContainer) return;
     paginationContainer.innerHTML = '';
     if (totalPages <= 1) return;
 
@@ -121,16 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.createElement('button');
       btn.className = `catalog-pagination__btn ${i === currentPage ? 'catalog-pagination__btn--active' : ''}`;
       btn.textContent = i;
-      btn.onclick = () => {
+      btn.addEventListener('click', () => {
         currentPage = i;
         renderCatalog();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
+      });
       paginationContainer.appendChild(btn);
     }
   }
-
-  // Initial
-  renderCategoryFilters();
-  renderCatalog();
 });

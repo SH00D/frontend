@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель управления — ФармаПлюс CMS</title>
+  <meta name="description" content="Административная панель управления интернет-аптекой ФармаПлюс">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="admin-sidebar">
+      <div class="sidebar__logo">
+        <span class="sidebar__logo-icon">💊</span> Фарма<span>Плюс</span>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="index.html" class="sidebar__link sidebar__link--active">
+          <span class="sidebar__link-icon">📊</span> Дашборд
+        </a>
+        <a href="products.html" class="sidebar__link">
+          <span class="sidebar__link-icon">📦</span> Товары
+        </a>
+        <a href="add-product.html" class="sidebar__link">
+          <span class="sidebar__link-icon">➕</span> Добавить товар
+        </a>
+        <a href="orders.html" class="sidebar__link">
+          <span class="sidebar__link-icon">🧾</span> Заказы
+        </a>
+        <a href="categories.html" class="sidebar__link">
+          <span class="sidebar__link-icon">📁</span> Категории
+        </a>
+      </nav>
+      <div class="sidebar__footer">
+        <a href="../index.html" class="sidebar__store-link">🌐 Перейти в магазин</a>
+        <a href="#" class="sidebar__store-link" id="admin-logout-btn" style="margin-top:8px;color:#ff6b6b;">🚪 Выйти</a>
+      </div>
+    </aside>
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;display:none" id="sidebar-overlay"></div>
+
+    <!-- Content -->
+    <div class="admin-content">
+      <header class="admin-header">
+        <div class="admin-header__left">
+          <button class="admin-header__burger" id="admin-burger"><span></span><span></span><span></span></button>
+          <div class="admin-header__search">
+            <span class="admin-header__search-icon">🔍</span>
+            <input type="text" class="admin-header__search-input" placeholder="Поиск по панели...">
+          </div>
+        </div>
+        <div class="admin-header__right">
+          <button class="admin-header__notif">🔔<span class="admin-header__notif-dot"></span></button>
+          <div class="admin-header__user">
+            <div class="admin-header__avatar">АД</div>
+            <div>
+              <div class="admin-header__user-name">Администратор</div>
+              <div class="admin-header__user-role">Суперадмин</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="admin-main">
+        <h1 class="admin-page-title">Дашборд</h1>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--green">📦</div>
+            <div class="stat-card__info">
+              <span class="stat-card__value" id="stat-products">0</span>
+              <span class="stat-card__label">Всего товаров</span>
+              <span class="stat-card__trend stat-card__trend--up">↑ 12%</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--blue">🧾</div>
+            <div class="stat-card__info">
+              <span class="stat-card__value" id="stat-orders">0</span>
+              <span class="stat-card__label">Заказов</span>
+              <span class="stat-card__trend stat-card__trend--up">↑ 8%</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--orange">💰</div>
+            <div class="stat-card__info">
+              <span class="stat-card__value" id="stat-revenue">0 ₽</span>
+              <span class="stat-card__label">Выручка</span>
+              <span class="stat-card__trend stat-card__trend--up">↑ 15%</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--red">❌</div>
+            <div class="stat-card__info">
+              <span class="stat-card__value" id="stat-outofstock">0</span>
+              <span class="stat-card__label">Нет в наличии</span>
+              <span class="stat-card__trend stat-card__trend--down">↓ 3%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Recent Orders -->
+          <div class="panel">
+            <div class="panel__header">
+              <h2 class="panel__title">Последние заказы</h2>
+              <a href="orders.html" class="btn btn--sm btn--outline">Все заказы →</a>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Покупатель</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-orders"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="panel">
+            <div class="panel__header">
+              <h2 class="panel__title">Быстрые действия</h2>
+            </div>
+            <div class="panel__body">
+              <div class="quick-actions">
+                <a href="add-product.html" class="quick-action">
+                  <span class="quick-action__icon">➕</span>
+                  <span class="quick-action__text">Добавить товар</span>
+                </a>
+                <a href="orders.html" class="quick-action">
+                  <span class="quick-action__icon">📋</span>
+                  <span class="quick-action__text">Заказы</span>
+                </a>
+                <a href="categories.html" class="quick-action">
+                  <span class="quick-action__icon">📁</span>
+                  <span class="quick-action__text">Категории</span>
+                </a>
+                <a href="products.html" class="quick-action">
+                  <span class="quick-action__icon">📦</span>
+                  <span class="quick-action__text">Все товары</span>
+                </a>
+                <a href="../catalog.html" class="quick-action">
+                  <span class="quick-action__icon">🌐</span>
+                  <span class="quick-action__text">Витрина</span>
+                </a>
+                <a href="../contacts.html" class="quick-action">
+                  <span class="quick-action__icon">📞</span>
+                  <span class="quick-action__text">Контакты</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script>
+    const user =
+      JSON.parse(
+        localStorage.getItem(
+          'pharma_admin_auth'
+        )
+      );
+
+    if (
+      !user ||
+      user.role !== 'ADMIN'
+    ) {
+
+      window.location.href =
+        'login.html';
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const products = getStoredProducts();
+      const orders = getStoredOrders();
+      const revenue = orders.reduce((s, o) => s + o.total, 0);
+      const outOfStock = products.filter(p => !p.inStock).length;
+
+      document.getElementById('stat-products').textContent = products.length;
+      document.getElementById('stat-orders').textContent = orders.length;
+      document.getElementById('stat-revenue').textContent = formatPrice(revenue);
+      document.getElementById('stat-outofstock').textContent = outOfStock;
+
+      const tbody = document.getElementById('recent-orders');
+      tbody.innerHTML = orders.slice(0, 5).map(o => `
+        <tr>
+          <td><strong style="color:var(--admin-accent)">${o.id}</strong></td>
+          <td>${o.customer}</td>
+          <td><strong>${formatPrice(o.total)}</strong></td>
+          <td>${getStatusBadge(o.status)}</td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+
+</html>

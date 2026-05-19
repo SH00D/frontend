@@ -190,27 +190,49 @@
   <script src="js/products.js"></script>
   <script src="js/main.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Render Categories
+    document.addEventListener('DOMContentLoaded', async () => {
       const catGrid = document.getElementById('categories-grid');
-      categories.forEach(cat => {
-        catGrid.innerHTML += `
-          <a href="catalog.html?category=${cat.id}" class="home-cat-card" style="--cat-color: ${cat.color}; --cat-bg: ${cat.bg}">
-            <span class="home-cat-card__icon">${cat.icon}</span>
-            <div>
-              <h3 class="home-cat-card__title">${cat.label}</h3>
-              <p class="home-cat-card__desc">${cat.description}</p>
-            </div>
-          </a>
-        `;
-      });
-
-      // Render Featured
       const featGrid = document.getElementById('featured-grid');
-      const featured = mockProducts.slice(0, 6);
-      featured.forEach(prod => {
-        featGrid.innerHTML += createProductCardHTML(prod, cart);
-      });
+
+      try {
+        // Load categories and products in parallel
+        const [categories, products] = await Promise.all([
+          fetchCategories(),
+          fetchProducts()
+        ]);
+
+        // Render Categories
+        const catFragment = document.createDocumentFragment();
+        categories.forEach(cat => {
+          const meta = getCategoryMeta(cat.name);
+          const link = document.createElement('a');
+          link.href = `catalog.html?category=${encodeURIComponent(cat.name)}`;
+          link.className = 'home-cat-card';
+          link.style.cssText = `--cat-color: ${meta.color}; --cat-bg: ${meta.bg}`;
+          link.innerHTML = `
+            <span class="home-cat-card__icon">${meta.icon}</span>
+            <div>
+              <h3 class="home-cat-card__title">${cat.name}</h3>
+              <p class="home-cat-card__desc">${meta.description}</p>
+            </div>
+          `;
+          catFragment.appendChild(link);
+        });
+        catGrid.appendChild(catFragment);
+
+        // Render Featured Products (first 6)
+        const featured = products.slice(0, 6);
+        const featFragment = document.createDocumentFragment();
+        featured.forEach(prod => {
+          featFragment.appendChild(createProductCard(prod, cart));
+        });
+        featGrid.appendChild(featFragment);
+
+      } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        catGrid.innerHTML = '<p style="color:#6b7c80;text-align:center;padding:24px;">Не удалось загрузить категории. Проверьте бэкенд.</p>';
+        featGrid.innerHTML = '<p style="color:#6b7c80;text-align:center;padding:24px;">Не удалось загрузить товары. Проверьте бэкенд.</p>';
+      }
     });
   </script>
 </body>

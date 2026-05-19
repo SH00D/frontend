@@ -6,6 +6,14 @@
   <title>Каталог товаров — ФармаПлюс | Лекарства и витамины</title>
   <meta name="description" content="Заказывайте сертифицированные лекарства и БАДы в каталоге ФармаПлюс. Удобные фильтры, сортировка и быстрая доставка.">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Loader */
+    .catalog-loader { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; gap: 16px; grid-column: 1 / -1; }
+    .catalog-loader__spinner { width: 44px; height: 44px; border: 4px solid #e2e8f0; border-top-color: #00a651; border-radius: 50%; animation: loaderSpin .7s linear infinite; }
+    .catalog-loader__text { color: #6b7c80; font-size: .9rem; font-weight: 500; }
+    .catalog-empty--error h3 { color: #e53e3e; }
+    @keyframes loaderSpin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
   <!-- HEADER -->
@@ -91,7 +99,6 @@
               <option value="price_asc">Цена: по возрастанию</option>
               <option value="price_desc">Цена: по убыванию</option>
               <option value="name_asc">Название: А–Я</option>
-              <option value="rating">По рейтингу</option>
             </select>
           </div>
 
@@ -107,6 +114,192 @@
     </div>
   </main>
 
+  <!-- CUSTOMER REVIEWS -->
+  <section class="reviews-section" id="reviews-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Отзывы наших покупателей</h2>
+        <p class="section-subtitle">Более 50 000 довольных клиентов доверяют ФармаПлюс свое здоровье</p>
+      </div>
+
+      <div class="reviews-layout">
+        <!-- Reviews Summary Card -->
+        <div class="reviews-summary card">
+          <div class="reviews-summary__score">
+            <span class="reviews-summary__number">4.9</span>
+            <div class="reviews-summary__stars">⭐⭐⭐⭐⭐</div>
+            <span class="reviews-summary__count">На основе 2 847 отзывов</span>
+          </div>
+          <div class="reviews-summary__bars">
+            <div class="reviews-bar">
+              <span class="reviews-bar__label">5 ⭐</span>
+              <div class="reviews-bar__track"><div class="reviews-bar__fill" style="width: 78%"></div></div>
+              <span class="reviews-bar__pct">78%</span>
+            </div>
+            <div class="reviews-bar">
+              <span class="reviews-bar__label">4 ⭐</span>
+              <div class="reviews-bar__track"><div class="reviews-bar__fill" style="width: 15%"></div></div>
+              <span class="reviews-bar__pct">15%</span>
+            </div>
+            <div class="reviews-bar">
+              <span class="reviews-bar__label">3 ⭐</span>
+              <div class="reviews-bar__track"><div class="reviews-bar__fill" style="width: 5%"></div></div>
+              <span class="reviews-bar__pct">5%</span>
+            </div>
+            <div class="reviews-bar">
+              <span class="reviews-bar__label">2 ⭐</span>
+              <div class="reviews-bar__track"><div class="reviews-bar__fill" style="width: 1%"></div></div>
+              <span class="reviews-bar__pct">1%</span>
+            </div>
+            <div class="reviews-bar">
+              <span class="reviews-bar__label">1 ⭐</span>
+              <div class="reviews-bar__track"><div class="reviews-bar__fill" style="width: 1%"></div></div>
+              <span class="reviews-bar__pct">1%</span>
+            </div>
+          </div>
+          <div class="reviews-summary__badge">
+            <span>🏅</span> Рекомендуют <strong>96%</strong> покупателей
+          </div>
+        </div>
+
+        <!-- Reviews Grid -->
+        <div class="reviews-grid" id="reviews-grid">
+          <!-- Review 1 -->
+          <div class="review-card card animate-fadeInUp" style="animation-delay: 0s">
+            <div class="review-card__header">
+              <div class="review-card__avatar" style="background: linear-gradient(135deg, #00a651, #00c9a7)">ЕС</div>
+              <div class="review-card__meta">
+                <span class="review-card__author">Елена Смирнова</span>
+                <span class="review-card__date">15 мая 2026</span>
+              </div>
+              <span class="review-card__verified" title="Подтверждённая покупка">✅ Покупка</span>
+            </div>
+            <div class="review-card__stars">⭐⭐⭐⭐⭐</div>
+            <h4 class="review-card__title">Отличный сервис и быстрая доставка!</h4>
+            <p class="review-card__text">Заказывала витамин D3 и Омега-3 — всё пришло в оригинальной упаковке с хорошим сроком годности. Курьер приехал через 3 часа. Очень довольна, буду заказывать ещё!</p>
+            <div class="review-card__product">
+              <span class="review-card__product-icon">💊</span>
+              <span>Витамин D3 2000 ME</span>
+            </div>
+            <div class="review-card__footer">
+              <button class="review-card__helpful" id="helpful-btn-1">👍 Полезно <span>24</span></button>
+            </div>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="review-card card animate-fadeInUp" style="animation-delay: 0.1s">
+            <div class="review-card__header">
+              <div class="review-card__avatar" style="background: linear-gradient(135deg, #007bff, #6c5ce7)">АК</div>
+              <div class="review-card__meta">
+                <span class="review-card__author">Алексей Козлов</span>
+                <span class="review-card__date">12 мая 2026</span>
+              </div>
+              <span class="review-card__verified" title="Подтверждённая покупка">✅ Покупка</span>
+            </div>
+            <div class="review-card__stars">⭐⭐⭐⭐⭐</div>
+            <h4 class="review-card__title">Спасли в период простуды</h4>
+            <p class="review-card__text">Когда вся семья заболела, заказал Терафлю и Граммидин ночью — утром уже всё было у двери! Цены приятно удивили — дешевле, чем в ближайшей аптеке. Рекомендую всем!</p>
+            <div class="review-card__product">
+              <span class="review-card__product-icon">🤧</span>
+              <span>Терафлю Лимон</span>
+            </div>
+            <div class="review-card__footer">
+              <button class="review-card__helpful" id="helpful-btn-2">👍 Полезно <span>18</span></button>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="review-card card animate-fadeInUp" style="animation-delay: 0.2s">
+            <div class="review-card__header">
+              <div class="review-card__avatar" style="background: linear-gradient(135deg, #ff9f43, #ee5a24)">МП</div>
+              <div class="review-card__meta">
+                <span class="review-card__author">Мария Петрова</span>
+                <span class="review-card__date">8 мая 2026</span>
+              </div>
+              <span class="review-card__verified" title="Подтверждённая покупка">✅ Покупка</span>
+            </div>
+            <div class="review-card__stars">⭐⭐⭐⭐⭐</div>
+            <h4 class="review-card__title">Лучшая онлайн-аптека!</h4>
+            <p class="review-card__text">Пользуюсь ФармаПлюс уже полгода. Всегда большой выбор, удобные фильтры и никаких проблем с доставкой. La Roche-Posay нашла по лучшей цене именно здесь!</p>
+            <div class="review-card__product">
+              <span class="review-card__product-icon">🧴</span>
+              <span>La Roche-Posay Effaclar</span>
+            </div>
+            <div class="review-card__footer">
+              <button class="review-card__helpful" id="helpful-btn-3">👍 Полезно <span>31</span></button>
+            </div>
+          </div>
+
+          <!-- Review 4 -->
+          <div class="review-card card animate-fadeInUp" style="animation-delay: 0.3s">
+            <div class="review-card__header">
+              <div class="review-card__avatar" style="background: linear-gradient(135deg, #e53e3e, #ff6b6b)">ДИ</div>
+              <div class="review-card__meta">
+                <span class="review-card__author">Дмитрий Иванов</span>
+                <span class="review-card__date">3 мая 2026</span>
+              </div>
+              <span class="review-card__verified" title="Подтверждённая покупка">✅ Покупка</span>
+            </div>
+            <div class="review-card__stars">⭐⭐⭐⭐</div>
+            <h4 class="review-card__title">Хороший ассортимент, быстро</h4>
+            <p class="review-card__text">Заказывал Мезим и Линекс после отравления. Доставили быстро, фармацевт по телефону подсказал дозировку. Единственное — хотелось бы больше способов оплаты.</p>
+            <div class="review-card__product">
+              <span class="review-card__product-icon">🌿</span>
+              <span>Мезим Форте</span>
+            </div>
+            <div class="review-card__footer">
+              <button class="review-card__helpful" id="helpful-btn-4">👍 Полезно <span>12</span></button>
+            </div>
+          </div>
+
+          <!-- Review 5 -->
+          <div class="review-card card animate-fadeInUp" style="animation-delay: 0.4s">
+            <div class="review-card__header">
+              <div class="review-card__avatar" style="background: linear-gradient(135deg, #00c9a7, #00a651)">ОВ</div>
+              <div class="review-card__meta">
+                <span class="review-card__author">Ольга Волкова</span>
+                <span class="review-card__date">28 апр 2026</span>
+              </div>
+              <span class="review-card__verified" title="Подтверждённая покупка">✅ Покупка</span>
+            </div>
+            <div class="review-card__stars">⭐⭐⭐⭐⭐</div>
+            <h4 class="review-card__title">Для молодой мамы — находка!</h4>
+            <p class="review-card__text">С маленьким ребенком сложно бегать по аптекам. Заказала Бепантен и детский Парацетамол — привезли за 2 часа! Качество проверенное, упаковка не повреждена. Спасибо!</p>
+            <div class="review-card__product">
+              <span class="review-card__product-icon">🩹</span>
+              <span>Бепантен Мазь</span>
+            </div>
+            <div class="review-card__footer">
+              <button class="review-card__helpful" id="helpful-btn-5">👍 Полезно <span>42</span></button>
+            </div>
+          </div>
+
+          <!-- Review 6 -->
+          <div class="review-card card animate-fadeInUp" style="animation-delay: 0.5s">
+            <div class="review-card__header">
+              <div class="review-card__avatar" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe)">НГ</div>
+              <div class="review-card__meta">
+                <span class="review-card__author">Николай Григорьев</span>
+                <span class="review-card__date">20 апр 2026</span>
+              </div>
+              <span class="review-card__verified" title="Подтверждённая покупка">✅ Покупка</span>
+            </div>
+            <div class="review-card__stars">⭐⭐⭐⭐⭐</div>
+            <h4 class="review-card__title">Цены ниже, чем в офлайне!</h4>
+            <p class="review-card__text">Сравнивал цены на Нурофен и витамин С — здесь реально дешевле. Плюс постоянные скидки и удобный каталог. Перешел сюда полностью, в обычные аптеки больше не хожу.</p>
+            <div class="review-card__product">
+              <span class="review-card__product-icon">💊</span>
+              <span>Нурофен Экспресс</span>
+            </div>
+            <div class="review-card__footer">
+              <button class="review-card__helpful" id="helpful-btn-6">👍 Полезно <span>27</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
@@ -119,5 +312,21 @@
   <script src="js/products.js"></script>
   <script src="js/main.js"></script>
   <script src="js/catalog.js"></script>
+  <script>
+    // Reviews: "Helpful" button interaction
+    document.querySelectorAll('.review-card__helpful').forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (this.dataset.voted) return;
+        this.dataset.voted = '1';
+        const span = this.querySelector('span');
+        const count = parseInt(span.textContent) + 1;
+        span.textContent = count;
+        this.style.color = 'var(--color-primary)';
+        this.style.background = 'var(--color-primary-light)';
+        this.style.borderColor = 'var(--color-primary-light)';
+        this.style.pointerEvents = 'none';
+      });
+    });
+  </script>
 </body>
 </html>

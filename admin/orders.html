@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Управление заказами — ФармаПлюс CMS</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="admin-sidebar">
+      <div class="sidebar__logo"><span class="sidebar__logo-icon">💊</span> Фарма<span>Плюс</span></div>
+      <nav class="sidebar__nav">
+        <a href="index.html" class="sidebar__link"><span class="sidebar__link-icon">📊</span> Дашборд</a>
+        <a href="products.html" class="sidebar__link"><span class="sidebar__link-icon">📦</span> Товары</a>
+        <a href="add-product.html" class="sidebar__link"><span class="sidebar__link-icon">➕</span> Добавить товар</a>
+        <a href="orders.html" class="sidebar__link sidebar__link--active"><span class="sidebar__link-icon">🧾</span>
+          Заказы</a>
+        <a href="categories.html" class="sidebar__link"><span class="sidebar__link-icon">📁</span> Категории</a>
+      </nav>
+      <div class="sidebar__footer"><a href="../index.html" class="sidebar__store-link">🌐 Перейти в магазин</a><a
+          href="#" class="sidebar__store-link" id="admin-logout-btn" style="margin-top:8px;color:#ff6b6b;">🚪 Выйти</a>
+      </div>
+    </aside>
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;display:none" id="sidebar-overlay"></div>
+
+    <div class="admin-content">
+      <header class="admin-header">
+        <div class="admin-header__left">
+          <button class="admin-header__burger" id="admin-burger"><span></span><span></span><span></span></button>
+          <div class="admin-header__search">
+            <span class="admin-header__search-icon">🔍</span>
+            <input type="text" class="admin-header__search-input" placeholder="Поиск по панели...">
+          </div>
+        </div>
+        <div class="admin-header__right">
+          <button class="admin-header__notif">🔔<span class="admin-header__notif-dot"></span></button>
+          <div class="admin-header__user">
+            <div class="admin-header__avatar">АД</div>
+            <div>
+              <div class="admin-header__user-name">Администратор</div>
+              <div class="admin-header__user-role">Суперадмин</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="admin-main">
+        <h1 class="admin-page-title">Управление заказами <span id="orders-count"
+            style="font-size:.9rem;color:var(--admin-text-muted);font-weight:400"></span></h1>
+
+        <div class="toolbar">
+          <div class="toolbar__left">
+            <div class="toolbar__search">
+              <span class="toolbar__search-icon">🔍</span>
+              <input type="text" class="toolbar__search-input" id="orders-search"
+                placeholder="Поиск по ID или имени...">
+            </div>
+            <select class="form-select toolbar__filter" id="orders-status-filter">
+              <option value="">Все статусы</option>
+              <option value="processing">В обработке</option>
+              <option value="shipped">Отправлен</option>
+              <option value="delivered">Доставлен</option>
+              <option value="cancelled">Отменён</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div style="overflow-x:auto">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Покупатель</th>
+                  <th>Дата</th>
+                  <th>Сумма</th>
+                  <th>Статус</th>
+                  <th>Действия</th>
+                </tr>
+              </thead>
+              <tbody id="orders-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Order Detail Modal -->
+  <div class="modal-overlay" id="order-detail-modal">
+    <div class="modal" style="max-width:640px">
+      <div class="modal__header">
+        <h3 class="modal__title">Детали заказа</h3>
+        <button class="modal__close" onclick="closeModal('order-detail-modal')">✕</button>
+      </div>
+      <div class="modal__body"></div>
+      <div class="modal__footer">
+        <button class="btn btn--outline" onclick="closeModal('order-detail-modal')">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Change Modal -->
+  <div class="modal-overlay" id="status-modal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title">Изменить статус — <span id="status-order-id"></span></h3>
+        <button class="modal__close" onclick="closeModal('status-modal')">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="form-group">
+          <label class="form-label">Новый статус</label>
+          <select class="form-select" id="status-select">
+            <option value="processing">В обработке</option>
+            <option value="shipped">Отправлен</option>
+            <option value="delivered">Доставлен</option>
+            <option value="cancelled">Отменён</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--outline" onclick="closeModal('status-modal')">Отмена</button>
+        <button class="btn btn--primary" id="save-status-btn">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script src="js/orders.js"></script>
+  <script>
+
+    const user =
+      JSON.parse(
+        localStorage.getItem(
+          'pharma_admin_auth'
+        )
+      );
+
+    if (
+      !user ||
+      user.role !== 'ADMIN'
+    ) {
+
+      window.location.href =
+        'login.html';
+    }
+
+  </script>
+</body>
+
+</html>
