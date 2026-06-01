@@ -1,31 +1,23 @@
-/* ══════════════════════════════════════════════════════════
-   products.js — API Module & Product Card Builder
-   Центральный модуль для работы с Backend API.
-   ══════════════════════════════════════════════════════════ */
+
+
 
 const API_BASE = 'http://localhost:8080/api';
 
-/* ── Category Meta (иконки, цвета для каждой категории) ── */
+
 const CATEGORY_META = {
-  'Витамины и БАДы':    { icon: '💊', color: '#00a651', bg: '#e6f7ef', description: 'Энергия и баланс вашего организма' },
-  'Обезболивающие':     { icon: '🩹', color: '#ff6b6b', bg: '#fff0f0', description: 'Эффективная помощь в любой ситуации' },
-  'Простуда и грипп':   { icon: '🤧', color: '#007bff', bg: '#e8f2ff', description: 'Защита и быстрое восстановление' },
-  'Уход за кожей':      { icon: '🧴', color: '#ff9f43', bg: '#fff8ee', description: 'Профессиональный уход для красоты' },
-  'Пищеварение':        { icon: '🌿', color: '#00c9a7', bg: '#e6faf7', description: 'Легкость и комфорт каждый день' },
+  'Витамины и БАДы': { icon: '💊', color: '#00a651', bg: '#e6f7ef', description: 'Энергия и баланс вашего организма' },
+  'Обезболивающие': { icon: '🩹', color: '#ff6b6b', bg: '#fff0f0', description: 'Эффективная помощь в любой ситуации' },
+  'Простуда и грипп': { icon: '🤧', color: '#007bff', bg: '#e8f2ff', description: 'Защита и быстрое восстановление' },
+  'Уход за кожей': { icon: '🧴', color: '#ff9f43', bg: '#fff8ee', description: 'Профессиональный уход для красоты' },
+  'Пищеварение': { icon: '🌿', color: '#00c9a7', bg: '#e6faf7', description: 'Легкость и комфорт каждый день' },
 };
 
 const DEFAULT_CATEGORY_META = { icon: '📦', color: '#6b7c80', bg: '#f0f4f8', description: 'Товары для здоровья' };
 
-/**
- * Получить мета-данные категории по имени
- */
+
 function getCategoryMeta(categoryName) {
   return CATEGORY_META[categoryName] || DEFAULT_CATEGORY_META;
 }
-
-/* ═══════════════════════════════════════
-   API Functions — async/await + обработка ошибок
-   ═══════════════════════════════════════ */
 
 /**
  * Загрузить все товары с бэкенда
@@ -40,7 +32,7 @@ async function fetchProducts() {
 }
 
 /**
- * Загрузить один товар по ID
+ 
  * @param {number} id
  * @returns {Promise<Object>} товар
  */
@@ -64,9 +56,6 @@ async function fetchCategories() {
   return response.json();
 }
 
-/* ═══════════════════════════════════════
-   DOM Builders — createElement, без innerHTML +=
-   ═══════════════════════════════════════ */
 
 /**
  * Создать HTML-элемент карточки товара (через createElement)
@@ -101,7 +90,7 @@ function createProductCard(product, cartItems = []) {
   imageLink.appendChild(img);
   article.appendChild(imageLink);
 
-  // Body
+
   const body = document.createElement('div');
   body.className = 'product-card__body';
 
@@ -116,7 +105,7 @@ function createProductCard(product, cartItems = []) {
   nameLink.textContent = product.name;
   body.appendChild(nameLink);
 
-  // Description (truncated)
+
   if (product.description) {
     const desc = document.createElement('p');
     desc.className = 'product-card__desc';
@@ -126,7 +115,7 @@ function createProductCard(product, cartItems = []) {
     body.appendChild(desc);
   }
 
-  // Footer (price + button)
+
   const footer = document.createElement('div');
   footer.className = 'product-card__footer';
 
@@ -154,9 +143,7 @@ function createProductCard(product, cartItems = []) {
   return article;
 }
 
-/**
- * Показать loader
- */
+
 function showLoader(container) {
   const loader = document.createElement('div');
   loader.className = 'catalog-loader';
@@ -168,17 +155,13 @@ function showLoader(container) {
   container.appendChild(loader);
 }
 
-/**
- * Скрыть loader
- */
+
 function hideLoader() {
   const loader = document.getElementById('catalog-loader');
   if (loader) loader.remove();
 }
 
-/**
- * Показать пустое состояние
- */
+
 function showEmptyState(container, message = 'Товары не найдены') {
   const empty = document.createElement('div');
   empty.className = 'catalog-empty';
@@ -190,9 +173,7 @@ function showEmptyState(container, message = 'Товары не найдены')
   container.appendChild(empty);
 }
 
-/**
- * Показать ошибку
- */
+
 function showErrorState(container, message = 'Не удалось загрузить данные') {
   const error = document.createElement('div');
   error.className = 'catalog-empty catalog-empty--error';

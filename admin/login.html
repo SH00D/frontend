@@ -20,7 +20,7 @@
       overflow: hidden;
     }
 
-    /* Animated background particles */
+
     .login-bg {
       position: fixed;
       inset: 0;
@@ -94,7 +94,7 @@
       }
     }
 
-    /* Login Card */
+
     .login-card {
       position: relative;
       z-index: 1;
@@ -120,7 +120,7 @@
       }
     }
 
-    /* Logo */
+
     .login-logo {
       text-align: center;
       margin-bottom: 8px;
@@ -264,7 +264,7 @@
       opacity: .8;
     }
 
-    /* Error message */
+
     .login-error {
       display: none;
       align-items: center;
@@ -308,7 +308,7 @@
       }
     }
 
-    /* Submit button */
+
     .login-btn {
       width: 100%;
       padding: 14px 24px;
@@ -367,7 +367,7 @@
       }
     }
 
-    /* Footer */
+
     .login-footer {
       text-align: center;
       margin-top: 24px;
@@ -389,7 +389,7 @@
       color: var(--admin-primary);
     }
 
-    /* Remember me */
+
     .login-remember {
       display: flex;
       align-items: center;
@@ -411,7 +411,7 @@
       user-select: none;
     }
 
-    /* Mobile tweaks */
+
     @media (max-width: 500px) {
       .login-card {
         padding: 36px 24px 32px;
@@ -433,7 +433,7 @@
 
 <body class="login-body">
 
-  <!-- Animated Background -->
+
   <div class="login-bg">
     <div class="login-bg__circle"></div>
     <div class="login-bg__circle"></div>
@@ -441,9 +441,9 @@
     <div class="login-bg__circle"></div>
   </div>
 
-  <!-- Login Card -->
+
   <div class="login-card">
-    <!-- Logo -->
+
     <div class="login-logo">
       <div class="login-logo__icon">💊</div>
       <div class="login-logo__title">Фарма<span>Плюс</span></div>
@@ -458,7 +458,7 @@
       <span id="login-error-text">Неверный логин или пароль</span>
     </div>
 
-    <!-- Form -->
+
     <form class="login-form" id="login-form" autocomplete="on">
       <div class="form-group">
         <label class="form-label" for="login-input">👤 Логин</label>
@@ -506,7 +506,7 @@
     const loginErrorText = document.getElementById('login-error-text');
     const togglePassword = document.getElementById('toggle-password');
 
-    // If already logged in, redirect
+
     const savedUser =
       JSON.parse(
         localStorage.getItem(
@@ -530,14 +530,14 @@
       }
     }
 
-    // Toggle password visibility
+
     togglePassword.addEventListener('click', () => {
       const type = passwordInput.type === 'password' ? 'text' : 'password';
       passwordInput.type = type;
       togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
     });
 
-    // Hide error on input
+
     [loginInput, passwordInput].forEach(input => {
       input.addEventListener('input', () => {
         loginError.classList.remove('login-error--visible');
@@ -548,7 +548,7 @@
     function showError(message) {
       loginErrorText.textContent = message;
       loginError.classList.remove('login-error--visible');
-      // Force reflow to restart animation
+
       void loginError.offsetWidth;
       loginError.classList.add('login-error--visible');
       loginInput.classList.add('input--error');
@@ -569,7 +569,7 @@
       const login = loginInput.value.trim();
       const password = passwordInput.value;
 
-      // Client-side validation
+
       if (!login) {
         showError('Введите логин');
         loginInput.focus();
@@ -593,7 +593,7 @@
         const data = await response.json();
 
         if (data.success) {
-          // Save auth data
+
           const authData = {
             login: data.login,
             role: data.role,
@@ -606,7 +606,7 @@
           loginBtn.classList.remove('login-btn--loading');
           loginBtn.innerHTML = '✅ Вход выполнен!';
 
-          // Redirect after brief delay
+
           setTimeout(() => {
 
             if (data.role === 'ADMIN') {
@@ -634,7 +634,7 @@
       }
     });
 
-    // Focus first input on load
+
     loginInput.focus();
   </script>
 </body>

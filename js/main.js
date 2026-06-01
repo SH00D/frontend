@@ -1,17 +1,12 @@
-/* ══════════════════════════════════════════════════════════
-   main.js — Global Cart State, addToCart, Mobile Menu
-   Работает с данными из API (product.imageUrl, product.categoryName, product.stock)
-   ══════════════════════════════════════════════════════════ */
 
-// Global Cart State
+
+
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-// Кэш загруженных товаров (для addToCart)
+
 let _productsCache = null;
 
-/**
- * Обновить бейдж корзины
- */
+
 function updateCartBadge() {
   const badges = document.querySelectorAll('.header__cart-badge');
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -25,9 +20,8 @@ function updateCartBadge() {
   });
 }
 
-/**
- * Загрузить и закэшировать товары
- */
+
+
 async function getProductsCache() {
   if (_productsCache) return _productsCache;
   try {
@@ -39,9 +33,7 @@ async function getProductsCache() {
   }
 }
 
-/**
- * Добавить товар в корзину по ID (загружает из API если нужно)
- */
+
 async function addToCart(productId) {
   const products = await getProductsCache();
   const product = products.find(p => p.id === productId);
@@ -57,7 +49,7 @@ async function addToCart(productId) {
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartBadge();
 
-  // Update button state on the page immediately
+
   const btn = document.getElementById(`add-to-cart-${productId}`);
   if (btn) {
     btn.classList.remove('btn--primary');
@@ -67,7 +59,7 @@ async function addToCart(productId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Mobile menu toggle
+
   const burgerBtn = document.getElementById('burger-btn');
   const nav = document.querySelector('.header__nav');
   const overlay = document.querySelector('.header__overlay');
@@ -88,6 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Initial cart badge
+
   updateCartBadge();
 });

@@ -1,13 +1,9 @@
-/* ══════════════════════════════════════
-   orders.js — FULL BACKEND VERSION
-   ══════════════════════════════════════ */
+
 
 let allOrders = [];
 let filteredOrders = [];
 
-/* =========================================
-   INIT
-========================================= */
+
 
 document.addEventListener(
   'DOMContentLoaded',
@@ -33,9 +29,7 @@ async function initOrders() {
   }
 }
 
-/* =========================================
-   API
-========================================= */
+
 
 async function loadOrders() {
 
@@ -50,9 +44,7 @@ async function loadOrders() {
     [...allOrders];
 }
 
-/* =========================================
-   EVENTS
-========================================= */
+
 
 function bindOrderEvents() {
 
@@ -83,9 +75,7 @@ function bindOrderEvents() {
   }
 }
 
-/* =========================================
-   FILTERS
-========================================= */
+
 
 function applyOrderFilters() {
 
@@ -127,9 +117,7 @@ function applyOrderFilters() {
   renderOrders();
 }
 
-/* =========================================
-   RENDER
-========================================= */
+
 
 function renderOrders() {
 
@@ -151,7 +139,7 @@ function renderOrders() {
       `${filteredOrders.length} заказов`;
   }
 
-  /* EMPTY */
+
 
   if (filteredOrders.length === 0) {
 
@@ -180,7 +168,7 @@ function renderOrders() {
     return;
   }
 
-  /* TABLE */
+
 
   tbody.innerHTML =
     filteredOrders.map(o => `
@@ -265,9 +253,7 @@ function renderOrders() {
     `).join('');
 }
 
-/* =========================================
-   VIEW ORDER
-========================================= */
+
 
 function viewOrder(id) {
 
@@ -381,9 +367,7 @@ function viewOrder(id) {
   );
 }
 
-/* =========================================
-   STATUS MODAL
-========================================= */
+
 
 function openStatusModal(id) {
 
@@ -424,9 +408,7 @@ function openStatusModal(id) {
   );
 }
 
-/* =========================================
-   CHANGE STATUS
-========================================= */
+
 
 async function changeStatus(id) {
 

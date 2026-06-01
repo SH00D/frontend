@@ -1,7 +1,4 @@
-/* ══════════════════════════════════════════════════════════
-   catalog.js — Каталог товаров с API, фильтрацией,
-   поиском, сортировкой и пагинацией
-   ══════════════════════════════════════════════════════════ */
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   const catalogGrid = document.getElementById('catalog-grid');
@@ -13,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sortSelect = document.getElementById('sort-select');
   const paginationContainer = document.getElementById('pagination');
 
-  // State
+
   const urlParams = new URLSearchParams(window.location.search);
   let currentSearch = (urlParams.get('search') || '').toLowerCase();
   let currentCategory = urlParams.get('category') || '';
@@ -22,13 +19,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentPage = 1;
   const PER_PAGE = 9;
 
-  // Data from API
+
   let allProducts = [];
   let allCategories = [];
 
   if (searchInput) searchInput.value = currentSearch;
 
-  // ── Load Data from Backend ──
+
   showLoader(catalogGrid);
 
   try {
@@ -41,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     allCategories = categories;
     hideLoader();
 
-    // Set max price from data
+
     if (allProducts.length > 0) {
       const maxProductPrice = Math.max(...allProducts.map(p => Number(p.price)));
       const roundedMax = Math.ceil(maxProductPrice / 100) * 100;
@@ -55,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // If URL has category name (from categories page), match it
+
     if (currentCategory) {
       const matchedCat = allCategories.find(c =>
         c.name.toLowerCase() === currentCategory.toLowerCase() ||
@@ -76,20 +73,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // ── Render Category Filter Buttons ──
+
   function renderCategoryFilters() {
     if (!filterCatContainer) return;
 
     filterCatContainer.innerHTML = '';
 
-    // "All" button
+
     const allBtn = document.createElement('button');
     allBtn.className = `catalog-sidebar__cat-btn ${!currentCategory ? 'catalog-sidebar__cat-btn--active' : ''}`;
     allBtn.textContent = '📂 Все товары';
     allBtn.addEventListener('click', () => updateCategory(''));
     filterCatContainer.appendChild(allBtn);
 
-    // Category buttons from API
+
     allCategories.forEach(cat => {
       const meta = getCategoryMeta(cat.name);
       const active = currentCategory === cat.name ? 'catalog-sidebar__cat-btn--active' : '';
@@ -108,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderCatalog();
   }
 
-  // ── Events ──
+
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       currentSearch = e.target.value.toLowerCase();
@@ -134,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // ── Main Render Function ──
+
   function renderCatalog() {
     // Filter
     let filtered = allProducts.filter(p => {
@@ -147,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return matchSearch && matchCat && matchPrice;
     });
 
-    // Sort
+
     switch (currentSort) {
       case 'price_asc':
         filtered.sort((a, b) => Number(a.price) - Number(b.price));
@@ -164,11 +161,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       resultsCount.textContent = `${filtered.length} товаров`;
     }
 
-    // Pagination
+
     const totalPages = Math.ceil(filtered.length / PER_PAGE);
     const paginated = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 
-    // Clear grid (using while loop — fastest way)
+
     while (catalogGrid.firstChild) {
       catalogGrid.removeChild(catalogGrid.firstChild);
     }
@@ -179,7 +176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // Build cards using DocumentFragment (no innerHTML += in loop)
+
     const fragment = document.createDocumentFragment();
     paginated.forEach(product => {
       fragment.appendChild(createProductCard(product, cart));
@@ -189,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderPagination(totalPages);
   }
 
-  // ── Pagination ──
+
   function renderPagination(totalPages) {
     if (!paginationContainer) return;
     paginationContainer.innerHTML = '';

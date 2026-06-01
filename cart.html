@@ -49,12 +49,12 @@
   <main class="page cart-page">
     <div class="container">
 
-      <!-- STEP 1: CART LIST -->
+
       <div id="cart-view" class="active">
-        <!-- Rendered by JS -->
+
       </div>
 
-      <!-- STEP 2: CHECKOUT FORM -->
+
       <div id="checkout-view" class="checkout-section">
         <h1 class="section-title" style="margin-bottom: 28px;">Оформление заказа</h1>
         <div class="checkout-grid">
@@ -111,7 +111,7 @@
             </form>
           </div>
 
-          <!-- Small Order Summary -->
+
           <div id="checkout-summary" class="cart-summary">
             <!-- Rendered by JS -->
           </div>
@@ -222,7 +222,7 @@
 
       cartView.innerHTML = itemsHtml;
 
-      // Also update checkout summary
+
       document.getElementById('checkout-summary').innerHTML = `
         <h3 class="cart-summary__title">Ваш заказ</h3>
         <div class="cart-summary__rows">
@@ -308,9 +308,7 @@
         'form-input--error'
       );
 
-      /* =====================================
-         FORM DATA
-      ===================================== */
+
 
       const customerName =
         document.getElementById(
@@ -331,9 +329,7 @@
 
           : 'Самовывоз';
 
-      /* =====================================
-         TOTAL
-      ===================================== */
+
 
       const totalPrice =
         cart.reduce(
@@ -394,18 +390,14 @@
         const createdOrder =
           await response.json();
 
-        /* =====================================
-           SUCCESS
-        ===================================== */
+
 
         document.getElementById(
           'order-id'
         ).textContent =
           `#${createdOrder.id}`;
 
-        /* =====================================
-           CLEAR CART
-        ===================================== */
+
 
         cart = [];
 
@@ -416,9 +408,7 @@
 
         updateCartBadge();
 
-        /* =====================================
-           SUCCESS VIEW
-        ===================================== */
+
 
         showView('success');
 
@@ -438,7 +428,7 @@
     document.addEventListener('DOMContentLoaded', function () {
       renderCart();
 
-      // Phone Mask
+
       const phoneInput = document.getElementById('order-phone');
       if (phoneInput) {
         phoneInput.addEventListener('input', function (e) {
@@ -465,7 +455,7 @@
       }
     });
 
-    // Yandex Map Integration
+    // Yandex Map 
     let checkoutMap, mapPlacemark;
     if (typeof ymaps !== 'undefined') {
       ymaps.ready(initMap);

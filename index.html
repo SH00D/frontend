@@ -186,7 +186,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPTS -->
+
   <script src="js/products.js"></script>
   <script src="js/main.js"></script>
   <script>
@@ -195,13 +195,13 @@
       const featGrid = document.getElementById('featured-grid');
 
       try {
-        // Load categories and products in parallel
+
         const [categories, products] = await Promise.all([
           fetchCategories(),
           fetchProducts()
         ]);
 
-        // Render Categories
+
         const catFragment = document.createDocumentFragment();
         categories.forEach(cat => {
           const meta = getCategoryMeta(cat.name);
@@ -220,7 +220,7 @@
         });
         catGrid.appendChild(catFragment);
 
-        // Render Featured Products (first 6)
+
         const featured = products.slice(0, 6);
         const featFragment = document.createDocumentFragment();
         featured.forEach(prod => {

@@ -101,7 +101,7 @@ const mockOrders = [
   { id: 'ORD-2841', customer: 'Анна Соколова', email: 'anna@mail.ru', phone: '+7 (999) 555-66-77', date: '2026-05-15', total: 980, status: 'delivered', items: [{ name: 'CeraVe Лосьон', qty: 1, price: 980 }], address: 'г. Владимир, ул. Лакина, 5' },
 ];
 
-/* ── LocalStorage helpers (with version check) ── */
+
 const ADMIN_DATA_VERSION = 'v2_30products';
 (function checkDataVersion() {
   if (localStorage.getItem('admin_data_version') !== ADMIN_DATA_VERSION) {
@@ -134,7 +134,7 @@ function saveOrders(orders) {
   localStorage.setItem('admin_orders', JSON.stringify(orders));
 }
 
-/* ── API Wrapper (falls back to mock) ── */
+
 async function apiRequest(method, endpoint, body = null) {
   try {
     const opts = { method, headers: { 'Content-Type': 'application/json' } };
@@ -148,7 +148,7 @@ async function apiRequest(method, endpoint, body = null) {
   }
 }
 
-/* ── Sidebar Toggle ── */
+
 function initSidebar() {
   const burger = document.getElementById('admin-burger');
   const sidebar = document.getElementById('admin-sidebar');
@@ -166,7 +166,7 @@ function initSidebar() {
   }
 }
 
-/* ── Toast ── */
+
 function showToast(message, type = 'success') {
   const existing = document.querySelector('.toast');
   if (existing) existing.remove();
@@ -178,7 +178,7 @@ function showToast(message, type = 'success') {
   setTimeout(() => { toast.remove(); }, 3000);
 }
 
-/* ── Modal ── */
+
 function openModal(id) {
   const modal = document.getElementById(id);
   if (modal) modal.classList.add('modal-overlay--active');
@@ -188,7 +188,7 @@ function closeModal(id) {
   if (modal) modal.classList.remove('modal-overlay--active');
 }
 
-/* ── Status Labels ── */
+
 function getStatusBadge(status) {
   const map = {
     processing: { label: 'В обработке', cls: 'badge--info' },
@@ -200,7 +200,7 @@ function getStatusBadge(status) {
   return `<span class="badge ${s.cls}">${s.label}</span>`;
 }
 
-/* ── Format helpers ── */
+
 function formatPrice(p) { return p.toLocaleString('ru-RU') + ' ₽'; }
 function formatDate(d) {
   const date = new Date(d);
@@ -211,14 +211,14 @@ function formatDate(d) {
 document.addEventListener('DOMContentLoaded', () => {
   initSidebar();
 
-  // Display admin login in header
+
   const auth = getAdminAuth();
   if (auth) {
     const userNameEl = document.querySelector('.admin-header__user-name');
     if (userNameEl) userNameEl.textContent = auth.login;
   }
 
-  // Logout button
+
   const logoutBtn = document.getElementById('admin-logout-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', (e) => {
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Close modals on overlay click
+
   document.querySelectorAll('.modal-overlay').forEach(ov => {
     ov.addEventListener('click', (e) => {
       if (e.target === ov) ov.classList.remove('modal-overlay--active');

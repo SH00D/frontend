@@ -1,6 +1,4 @@
-/* ══════════════════════════════════════
-   categories.js — Categories management
-   ══════════════════════════════════════ */
+
 
 let allCategories = [];
 

@@ -1,7 +1,4 @@
-/* ══════════════════════════════════════
-   products.js — Products management
-   FULL BACKEND VERSION
-   ══════════════════════════════════════ */
+
 
 let allProducts = [];
 let filteredProducts = [];
@@ -9,9 +6,7 @@ let currentPage = 1;
 
 const perPage = 8;
 
-/* =========================================
-   INIT
-========================================= */
+
 
 document.addEventListener(
   'DOMContentLoaded',
@@ -40,9 +35,7 @@ async function initProducts() {
   }
 }
 
-/* =========================================
-   API
-========================================= */
+
 
 async function loadProducts() {
 
@@ -64,9 +57,7 @@ async function loadCategories() {
   return await response.json();
 }
 
-/* =========================================
-   EVENTS
-========================================= */
+
 
 function bindEvents() {
 
@@ -107,9 +98,7 @@ function bindEvents() {
   }
 }
 
-/* =========================================
-   FILTERS
-========================================= */
+
 
 async function renderFilters() {
 
@@ -158,7 +147,7 @@ function applyFilters() {
   filteredProducts =
     allProducts.filter(p => {
 
-      /* SEARCH */
+
 
       if (
         search &&
@@ -169,7 +158,7 @@ function applyFilters() {
         return false;
       }
 
-      /* CATEGORY */
+
 
       if (
         cat &&
@@ -178,7 +167,7 @@ function applyFilters() {
         return false;
       }
 
-      /* STOCK */
+
 
       if (
         stock === 'in' &&
@@ -202,9 +191,7 @@ function applyFilters() {
   renderTable();
 }
 
-/* =========================================
-   TABLE
-========================================= */
+
 
 function renderTable() {
 
@@ -234,7 +221,7 @@ function renderTable() {
       `${filteredProducts.length} товаров`;
   }
 
-  /* EMPTY */
+
 
   if (page.length === 0) {
 
@@ -267,7 +254,7 @@ function renderTable() {
     return;
   }
 
-  /* TABLE */
+
 
   tbody.innerHTML =
     page.map(p => `
@@ -377,9 +364,7 @@ function renderTable() {
   renderPagination();
 }
 
-/* =========================================
-   PAGINATION
-========================================= */
+
 
 function renderPagination() {
 
@@ -465,9 +450,7 @@ function goToPage(page) {
   renderTable();
 }
 
-/* =========================================
-   EDIT
-========================================= */
+
 
 function editProduct(id) {
 
@@ -475,9 +458,7 @@ function editProduct(id) {
     `add-product.html?id=${id}`;
 }
 
-/* =========================================
-   DELETE
-========================================= */
+
 
 function confirmDeleteProduct(id) {
 
